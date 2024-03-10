@@ -96,8 +96,8 @@ PYTHONPATH="." python launch.py --config configs/videonvs.yaml --gpu <gpu> --tra
 
 ## Acknowledgement
 This code base is built upon the following awesome open-source projects:
-- [Stable Video Diffusion](https://github.com/ashawkey/stable-dreamfusion)
+- [Stable Video Diffusion](https://github.com/Stability-AI/generative-models)
 - [3D Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
-- [kiuikit](https://github.com/openai/shap-e)
+- [kiuikit](https://github.com/ashawkey/kiuikit)
 
 Thank the authors for their remarkable job !
