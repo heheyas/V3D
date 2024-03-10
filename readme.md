@@ -10,6 +10,7 @@ This repository contains the official implementation of [V3D: Video Diffusion Mo
 
 ### Video results
 Single Image to 3D
+
 Generated Multi-views
 
 https://github.com/heheyas/V3D/assets/44675551/bb724ed1-b9a6-4aa7-9a49-f1a8c8756c2f
