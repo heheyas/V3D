@@ -5,9 +5,9 @@ Tsinghua University, ShengShu
 
 This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](404). 
 
-### Work in Progress 
+### [Work in Progress]
 
-We are currently working on making this completely publicly available, please be patient.
+We are currently working on making this completely publicly available (including refactoring code, uploading weights, etc.), so please be patient.
 
 ### [Paper](assets/pdf/V3D.pdf) | [Project Page](TBD) | [HF Demo](TBD)
 
@@ -79,6 +79,7 @@ pip install -r requirements.txt
 2. Download our weights for V3D
 ```
 wget https://huggingface.co/heheyas/V3D/resolve/main/V3D.ckpt -O ckpts/V3D.ckpt
+wget https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/resolve/main/svd_xt.safetensors -O ckpts/svd_xt.safetensors
 ```
 3. Run the V3D Video diffusion to generate dense multi-views
 ```
