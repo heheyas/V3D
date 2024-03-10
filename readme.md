@@ -5,6 +5,9 @@ Tsinghua University, ShengShu
 
 This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](404). 
 
+### Work in Progress 
+
+We are currently working on making this completely publicly available, please be patient.
 
 ### [Paper](assets/pdf/V3D.pdf) | [Project Page](TBD) | [HF Demo](TBD)
 
@@ -75,7 +78,7 @@ pip install -r requirements.txt
 ```
 2. Download our weights for V3D
 ```
-wget xxxx ckpts/
+wget https://huggingface.co/heheyas/V3D/resolve/main/V3D.ckpt -O ckpts/V3D.ckpt
 ```
 3. Run the V3D Video diffusion to generate dense multi-views
 ```
@@ -84,11 +87,11 @@ PYTHONPATH="." python scripts/pub/V3D_512.py --input_path <image file or dir> --
 4. Reconstruct 3D assets from generated multi-views
 Using 3D Gaussian Splatting
 ```
-python recon/train_from_vid.py  -w --sh_degree 0 --iterations 4000 --lambda_dssim 1.0 --lambda_lpips 2.0 --save_iterations 4000 --num_pts 100_000 --video <your generated video>
+PYTHONPATH="." python recon/train_from_vid.py  -w --sh_degree 0 --iterations 4000 --lambda_dssim 1.0 --lambda_lpips 2.0 --save_iterations 4000 --num_pts 100_000 --video <your generated video>
 ```
 Or using (NeuS) instant-nsr-pl:
 ```
-python launch.py --config configs/videonvs.yaml --gpu <gpu> --train system.loss.lambda_normal=0.1 dataset.scene=<scene_name> dataset.root_dir="output_dir" dataset.img_wh='[512, 512]'
+PYTHONPATH="." python launch.py --config configs/videonvs.yaml --gpu <gpu> --train system.loss.lambda_normal=0.1 dataset.scene=<scene_name> dataset.root_dir="output_dir" dataset.img_wh='[512, 512]'
 ```
 
 ## Acknowledgement
