@@ -1,0 +1,35 @@
+target: sgm.models.autoencoder.AutoencodingEngine
+params:
+  loss_config:
+    target: torch.nn.Identity
+  regularizer_config:
+    target: sgm.modules.autoencoding.regularizers.DiagonalGaussianRegularizer
+  encoder_config: 
+    target: sgm.modules.diffusionmodules.model.Encoder
+    params:
+      attn_type: vanilla
+      double_z: True
+      z_channels: 4
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult: [1, 2, 4, 4]
+      num_res_blocks: 2
+      attn_resolutions: []
+      dropout: 0.0
+  decoder_config:
+    target: sgm.modules.autoencoding.temporal_ae.VideoDecoder
+    params:
+      attn_type: vanilla
+      double_z: True
+      z_channels: 4
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult: [1, 2, 4, 4]
+      num_res_blocks: 2
+      attn_resolutions: []
+      dropout: 0.0
+      video_kernel_size: [3, 1, 1]

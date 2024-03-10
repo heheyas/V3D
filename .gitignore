@@ -1,0 +1,42 @@
+# extensions
+*.egg-info
+*.py[cod]
+
+# envs
+.pt13
+.pt2
+
+# directories
+/checkpoints
+/dist
+/outputs
+/build
+/src
+logs/
+ckpts/
+tmp/
+lightning_logs/
+images/
+images*/
+kb_configs/
+debug_lvis.log
+*.log
+.cache/
+redirects/
+submits/
+extern/
+assets/images
+output/
+assets/scene
+assets/GSO
+assets/SD
+spirals
+*.zip
+paper/
+spirals_co3d/
+scene_spirals/
+assets/
+blenders/
+colmap_results/
+depth_spirals/
+recon/SIBR_viewers/

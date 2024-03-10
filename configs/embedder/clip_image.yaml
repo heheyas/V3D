@@ -1,0 +1,8 @@
+target: sgm.modules.encoders.modules.FrozenOpenCLIPImagePredictionEmbedder
+params:
+  n_cond_frames: 1
+  n_copies: 1
+  open_clip_embedding_config:
+    target: sgm.modules.encoders.modules.FrozenOpenCLIPImageEmbedder
+    params:
+      freeze: True
