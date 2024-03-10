@@ -6,7 +6,7 @@ Tsinghua University, ShengShu
 This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](404). 
 
 
-### [Paper](TBD) | [Project Page](TBD) | [HF Demo](TBD)
+### [Paper](assets/pdf/V3D.pdf) | [Project Page](TBD) | [HF Demo](TBD)
 
 ### Video results
 Single Image to 3D

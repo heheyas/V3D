@@ -35,8 +35,8 @@ spirals
 paper/
 spirals_co3d/
 scene_spirals/
-assets/
 blenders/
 colmap_results/
 depth_spirals/
 recon/SIBR_viewers/
+recon/assets/
