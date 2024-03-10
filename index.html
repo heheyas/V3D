@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Generating Dense and Consistent Multi-views with Video Diffusion Models">
+  <meta name="keywords" content="Video Diffusion Models, Image to 3D, Novel View Synthese">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>V3D: Video Diffusion Models are Effective 3D Generators</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script> -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro|Jost"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://gsgen3d.github.io">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Related Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/">
+            3D Gaussian Splatting
+          </a>
+          <a class="navbar-item" href="https://github.com/ashawkey/stable-dreamfusion">
+            Stable DreamFusion
+          </a>
+          <a class="navbar-item" href="https://github.com/threestudio-project/threestudio">
+            threestudio
+          </a>
+          <a class="navbar-item" href="https://fantasia3d.github.io/">
+            Fantasia3D
+          </a>
+          <a class="navbar-item" href="https://ml.cs.tsinghua.edu.cn/prolificdreamer/">
+            ProlificDreamer
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">V3D: Video Diffusion Models are Effective 3D Generators</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="404">Zilong Chen</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="404">Yikai Wang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="404">Feng Wang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="404">Zhengyi Wang</a><sup>1,2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="404">Huaping Liu</a><sup>1</sup>,
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Tsinghua University,</span>
+            <span class="author-block"><sup>2</sup>ShengShu</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="./static/pdfs/V3D__arxiv_ver__.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="404"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video(Coming Soon)</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/heheyas/V3D"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/spirals/rolling_3x6_short.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        V3D generates consistent multi-views with video diffusion models.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/corgi.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_DSLR_photo_of_Car_made_out_of_sushi.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_beautiful_dress_made_out_of_feathers,_on_a_mannequin..mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_DSLR_photo_of_a_peacock_on_a_surfboard.mp4"
+                    type="video/mp4">
+          </video>
+        </div>   
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_DSLR_photo_of_a_tray_of_Sushi_containing_pugs.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_zoomed_out_DSLR_photo_of_a_ladybug.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_zoomed_out_DSLR_photo_of_a_brain_in_a_jar.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_bunch_of_blue_rose,_highly_detailed.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/spirals/A_zoomed_out_DSLR_photo_of_a_beautiful_suit_made_out_of_moss,_on_a_mannequin._Studio_lighting,_high_quality,_high_resolution.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Automatic 3D generation has recently attracted widespread attention. Recent methods have greatly accelerated the generation speed, but usually produce less-detailed objects due to limited model capacity or 3D data. Motivated by recent advancements in video diffusion models, we introduce \approach, which leverages the world simulation capacity of pre-trained video diffusion models to facilitate 3D generation. To fully unleash the potential of video diffusion to perceive the 3D world, we further introduce geometrical consistency prior and extend the video diffusion model to a multi-view consistent 3D generator. Benefiting from this, the state-of-the-art video diffusion model could be fine-tuned to generate 360-degree orbit frames surrounding an object given a single image. With our tailored reconstruction pipelines, we can generate high-quality meshes or 3D Gaussians within 3 minutes. Furthermore, our method can be extended to scene-level novel view synthesis, achieving precise control over the camera path with sparse input views. Extensive experiments demonstrate the superior performance of the proposed approach, especially in terms of generation quality and multi-view consistency. Our code is available at <a href="https://github.com/heheyas/V3D">https://github.com/heheyas/V3D</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://streamable.com/e/28snte" frameborder="0" width="100%" height="100%" allowfullscreen style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden;"></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+<section class="section">
+   <div class="columns is-centered has-text-centered, video-table-container">
+      <div class="column is-full-width">
+        <table class="video-container-table">
+        <tr>
+            <td>
+                <video class="video-container" autoplay controls muted loop playsinline>
+                    <source src="./static/objects/corgi_bread.mp4" type="video/mp4">
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_high_quality_photo_of_a_furry_corgi.splat"></a></p>
+            </td>
+            <td>
+                <video class="video-container" autoplay controls muted loop playsinline>
+                    <source src="./static/objects/otter.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_DSLR_photo_of_Car_made_out_of_sushi.splat"></a></p>
+            </td>
+            <td>
+                <video class="video-container" autoplay controls muted loop playsinline>
+                    <source src="./static/objects/robot.mp4" type="video/mp4">
+                    A high quality photo of a furry corgi
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=a_plate_of_delicious_tacos.splat"></a></p>
+            </td>
+            <td>
+                <video class="video-container" autoplay controls muted loop playsinline>
+                    <source src="./static/objects/corgi_rocket.mp4" type="video/mp4">
+                    A high quality photo of a furry corgi
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=an_airplane_made_out_of_wood.splat"></a></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/sunflower.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="viewer.html?url=A_zoomed_out_DSLR_photo_of_DSLR_photo_of_a_pineapple.splat"></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/gso_clock.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=a_ficus_planted_in_a_pot.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/cool_teddy.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_plush_dragon_toy.splat"></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/otter.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_completely_destroyed_car.splat"></a></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/real_otter.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_high_quality_photo_of_a_blue_tulip.splat"><a href="./viewer.html?url=A_high_quality_photo_of_a_blue_tulip.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/elephant_girl.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_bunch_of_blue_rose,_highly_detailed.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/sitting_dog.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_high_quality_photo_of_a_durian.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/objects/chicken_nesting.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=a_high_quality_photo_of_sunflowers_in_a_vase.splat"></p>
+            </td>
+        </tr>
+        <!-- <tr>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/CO3D/hydrant_1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_high_quality_photo_of_a_blue_tulip.splat"><a href="./viewer.html?url=A_high_quality_photo_of_a_blue_tulip.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/CO3D/hydrant_2.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_bunch_of_blue_rose,_highly_detailed.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/CO3D/hydrant_3.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=A_high_quality_photo_of_a_durian.splat"></a></p>
+            </td>
+            <td>
+                <video autoplay controls muted loop playsinline>
+                    <source src="./static/CO3D/hydrant_4.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="video-description"><a href="./viewer.html?url=a_high_quality_photo_of_sunflowers_in_a_vase.splat"></p>
+            </td>
+        </tr> -->
+    </table>
+      </div>
+    </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Concurrent Work. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Research or Resources</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            Our approach is based on the following research or resources.
+          </p>
+          <p>
+            <a href="https://arxiv.org/abs/2104.09125">Stable Video Diffusion</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.
+          </p>
+          <p>
+            <a href="https://github.com/threestudio-project/threestudio">threestudio</a> provides a great baseline for text-to-3D generation.
+          </p>
+          <p>
+            <a href="https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/">3D Gaussian Splatting</a> the pioneering work achieves superior performance and enables real-time rendering.
+          </p>
+          <p>
+            <a href="https://github.com/antimatter15/splat">splat</a> a WebGL based gaussian renderer.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Concurrent Work. -->
+
+  </div>
+</section>
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <!-- <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a> -->
+      <a class="icon-link" href="https://github.com/gsgen3d" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            We thank the authors of <a href="https://github.com/nerfies/nerfies.github.io"><span class="textsc">Nerfies</span></a> that kindly open sourced the template of this website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
