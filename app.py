@@ -22,6 +22,7 @@ from einops import rearrange, repeat
 import rembg
 import os
 from glob import glob
+from mediapy import write_video
 
 
 def do_sample(
@@ -40,8 +41,8 @@ def do_sample(
 ):
     # if image.mode == "RGBA":
     #     image = image.convert("RGB")
-    w, h = image.size
     image = Image.fromarray(image)
+    w, h = image.size
 
     if border_ratio > 0:
         if image.mode != "RGBA" or ignore_alpha:
@@ -133,13 +134,14 @@ def do_sample(
                 .numpy()
                 .astype(np.uint8)
             )
+            write_video(video_path, frames, fps=6)
 
-    return frames
+    return video_path
 
 
 def change_model_params(model, min_cfg, max_cfg):
-    model.params.sampler.guider.max_scale = max_cfg
-    model.params.sampler.guider.min_scale = min_cfg
+    model.sampler.guider.max_scale = max_cfg
+    model.sampler.guider.min_scale = min_cfg
 
 
 def launch(device="cuda", port=4321, share=False):
@@ -172,7 +174,7 @@ def launch(device="cuda", port=4321, share=False):
     ae_model = ae_model.to(device)
     rembg_session = rembg.new_session()
 
-    model = load_model(
+    model, _ = load_model(
         model_config, device, num_frames, num_steps, min_cfg=3.5, max_cfg=3.5
     )
 
@@ -182,28 +184,28 @@ def launch(device="cuda", port=4321, share=False):
                 input_image = gr.Image(value=None, label="Input Image")
 
                 border_ratio_slider = gr.Slider(
-                    value=0.05,
+                    value=0.3,
                     label="Border Ratio",
                     minimum=0.05,
                     maximum=0.5,
                     step=0.05,
                 )
                 decoding_t_slider = gr.Slider(
-                    value=num_frames,
+                    value=1,
                     label="Number of Decoding frames",
                     minimum=1,
                     maximum=num_frames,
                     step=1,
                 )
                 min_guidance_slider = gr.Slider(
-                    value=0.05,
+                    value=3.5,
                     label="Min CFG Value",
                     minimum=0.05,
                     maximum=0.5,
                     step=0.05,
                 )
                 max_guidance_slider = gr.Slider(
-                    value=0.05,
+                    value=3.5,
                     label="Max CFG Value",
                     minimum=0.05,
                     maximum=0.5,
@@ -241,6 +243,20 @@ def launch(device="cuda", port=4321, share=False):
                 output_folder,
             )
 
+    # do_sample(
+    #     np.asarray(Image.open("assets/baby_yoda.png")),
+    #     model,
+    #     clip_model,
+    #     ae_model,
+    #     device,
+    #     num_frames,
+    #     num_steps,
+    #     1,
+    #     0.3,
+    #     False,
+    #     rembg_session,
+    #     output_folder,
+    # )
     demo.launch(
         inbrowser=True, inline=False, server_port=port, share=share, show_error=True
     )
