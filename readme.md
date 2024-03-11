@@ -92,7 +92,12 @@ PYTHONPATH="." python recon/train_from_vid.py  -w --sh_degree 0 --iterations 400
 ```
 Or using (NeuS) instant-nsr-pl:
 ```
-PYTHONPATH="." python launch.py --config configs/videonvs.yaml --gpu <gpu> --train system.loss.lambda_normal=0.1 dataset.scene=<scene_name> dataset.root_dir="output_dir" dataset.img_wh='[512, 512]'
+cd mesh_recon
+PYTHONPATH="." python launch.py --config configs/videonvs.yaml --gpu <gpu> --train system.loss.lambda_normal=0.1 dataset.scene=<scene_name> dataset.root_dir=<output_dir> dataset.img_wh='[512, 512]'
+```
+Refine texture
+```
+python refine.py --mesh <your obj mesh file> --scene <your video> --num-opt 8 --lpips 1.0 --iters 500
 ```
 
 ## Acknowledgement
@@ -100,5 +105,6 @@ This code base is built upon the following awesome open-source projects:
 - [Stable Video Diffusion](https://github.com/Stability-AI/generative-models)
 - [3D Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/)
 - [kiuikit](https://github.com/ashawkey/kiuikit)
+- [Instant-nsr-pl](https://github.com/bennyguo/instant-nsr-pl)
 
 Thank the authors for their remarkable job !

@@ -40,3 +40,5 @@ colmap_results/
 depth_spirals/
 recon/SIBR_viewers/
 recon/assets/
+mesh_recon/exp
+mesh_recon/runs

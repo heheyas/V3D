@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import transforms
+from pathlib import Path
 
 import timm
 
@@ -996,6 +997,15 @@ class DPTDepthModel(DPT_):
         return super().forward(x).squeeze(dim=1)
 
 
+def download_if_need(path, url):
+    if Path(path).exists():
+        return
+    import wget
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    wget.download(url, out=str(path))
+
+
 class DPT:
     def __init__(self, device, mode="depth"):
         self.mode = mode
@@ -1011,7 +1021,11 @@ class DPT:
                 ]
             )
         elif self.mode == "normal":
-            path = "download/omnidata_dpt_normal_v2.ckpt"
+            path = "../ckpts/omnidata_dpt_normal_v2.ckpt"
+            download_if_need(
+                path,
+                "https://huggingface.co/clay3d/omnidata/resolve/main/omnidata_dpt_normal_v2.ckpt",
+            )
             self.model = DPTDepthModel(backbone="vitb_rn50_384", num_channels=3)
             self.aug = transforms.Compose(
                 [

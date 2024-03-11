@@ -14,4 +14,4 @@ def make(name, config):
     return dataset
 
 
-from . import blender, colmap, dtu, ortho, videonvs, videonvs_co3d
+from . import blender, colmap, dtu, ortho, videonvs, videonvs_co3d, v3d

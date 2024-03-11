@@ -22,11 +22,14 @@ from kiui.cam import orbit_camera, get_perspective
 from torchmetrics.image import LearnedPerceptualImagePatchSimilarity
 
 from mesh import Mesh
+from mediapy import read_video
 import tyro
+
+from datasets.v3d import get_uniform_poses
 
 
 class Refiner(nn.Module):
-    def __init__(self, mesh_filename, scene_dir, num_opt=4, lpips: float = 0.0) -> None:
+    def __init__(self, mesh_filename, video, num_opt=4, lpips: float = 0.0) -> None:
         super().__init__()
         self.output_size = 512
         znear = 0.1
@@ -44,24 +47,17 @@ class Refiner(nn.Module):
         ).to(self.device)
         self.lpips = lpips
 
-        self.scene_dir = Path(scene_dir)
+        fov = 60
 
-        with open(self.scene_dir / "transforms_train.json", "r") as f:
-            meta = json.load(f)
+        frames = read_video(video)
+        self.name = Path(video).stem
+        frames = frames.astype(np.float32) / 255.0
+        frames = np.moveaxis(frames, -1, 1)
+        num_frames, h, w, c = frames.shape
+        self.poses = get_uniform_poses(num_frames, 2.0, 0.0, opengl=True)
+        frames = frames.astype(np.float32) / 255.0
 
-        fov = np.rad2deg(meta["camera_angle_x"])
-
-        poses = []
-        image_gt = []
-        for f in meta["frames"]:
-            poses.append(np.array(f["transform_matrix"]))
-            image = Image.open(self.scene_dir / f"{f['file_path']}.png")
-            image = to_tensor(image)
-            image = image[:3] + 1 - image[3].unsqueeze(0)
-            image_gt.append(image)
-
-        self.poses = np.stack(poses)
-        self.image_gt = torch.stack(image_gt).to(self.device)
+        self.image_gt = torch.from_numpy(frames).to(self.device)
 
         self.n_frames = len(self.poses)
         self.opt_frames = np.linspace(0, self.n_frames, num_opt + 1)[:num_opt].astype(
@@ -202,9 +198,9 @@ class Refiner(nn.Module):
 
             image_pred, _ = self.render_mesh(pose)
 
-            if i % 1000 == 0:
-                save_image(image_pred, f"tmp/image_pred_{i}.png")
-                save_image(image_gt, f"tmp/image_gt_{i}.png")
+            # if i % 1000 == 0:
+            #     save_image(image_pred, f"tmp/image_pred_{i}.png")
+            #     save_image(image_gt, f"tmp/image_gt_{i}.png")
 
             loss = F.mse_loss(image_pred, image_gt)
             if self.lpips > 0.0:
@@ -232,7 +228,9 @@ class Refiner(nn.Module):
         images = torch.stack(images)
         images = images.cpu().numpy()
         images = rearrange(images, "b c h w -> b h w c")
-        write_video(f"renders/{self.scene_dir.stem}.mp4", images, fps=3)
+        if not Path("renders").exists():
+            Path("renders").mkdir(parents=True, exist_ok=True)
+        write_video(f"renders/{self.name}.mp4", images, fps=3)
 
     @torch.no_grad()
     def render_normal_spiral(self):
@@ -244,7 +242,8 @@ class Refiner(nn.Module):
         images = torch.stack(images)
         images = images.cpu().numpy()
         images = rearrange(images, "b c h w -> b h w c")
-        write_video(f"renders/{self.scene_dir.stem}_normal.mp4", images, fps=3)
+        Path("renders").mkdir(exist_ok=True, parents=True)
+        write_video(f"renders/{self.name}_normal.mp4", images, fps=3)
 
     def export(self, filename):
         mesh = trimesh.Trimesh(
@@ -276,6 +275,8 @@ def do_refine(
     if not skip_refine:
         refiner.refine_texture(512, iters)
         save_path = Path("refined") / f"{Path(scene).stem}.obj"
+        if not save_path.parent.exists():
+            save_path.parent.mkdir(exist_ok=True, parents=True)
         refiner.export(str(save_path))
 
     refiner.render_spiral()
