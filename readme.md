@@ -1,7 +1,7 @@
 # V3D: Video Diffusion Models are Effective 3D Generators
-Zilong Chen, Yikai Wang, Feng Wang, Zhengyi Wang, Huaping Liu
+Zilong Chen<sup>1,2</sup>, Yikai Wang<sup>1</sup>, Feng Wang<sup>1</sup>, Zhengyi Wang<sup>1,2</sup>, Huaping Liu<sup>1</sup>
 
-Tsinghua University, ShengShu
+<sup>1</sup>Tsinghua University, <sup>2</sup>ShengShu
 
 This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](404). 
 
@@ -9,7 +9,7 @@ This repository contains the official implementation of [V3D: Video Diffusion Mo
 
 We are currently working on making this completely publicly available (including refactoring code, uploading weights, etc.), so please be patient.
 
-### [Paper](assets/pdf/V3D.pdf) | [Project Page](TBD) | [HF Demo](TBD)
+### [Paper](assets/pdf/V3D.pdf) | [Project Page](https://heheyas.github.io/V3D) | [HF Demo](TBD)
 
 ### Video results
 Single Image to 3D
@@ -97,7 +97,7 @@ PYTHONPATH="." python launch.py --config configs/videonvs.yaml --gpu <gpu> --tra
 ```
 Refine texture
 ```
-python refine.py --mesh <your obj mesh file> --scene <your video> --num-opt 8 --lpips 1.0 --iters 500
+python refine.py --mesh <your obj mesh file> --scene <your video> --num-opt 16 --lpips 1.0 --iters 500
 ```
 
 ## Acknowledgement
