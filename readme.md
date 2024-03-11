@@ -78,7 +78,7 @@ pip install -r requirements.txt
 ```
 2. Download our weights for V3D
 ```
-wget https://huggingface.co/heheyas/V3D/resolve/main/V3D.ckpt -O ckpts/V3D.ckpt
+wget https://huggingface.co/heheyas/V3D/resolve/main/V3D.ckpt -O ckpts/V3D_512.ckpt
 wget https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/resolve/main/svd_xt.safetensors -O ckpts/svd_xt.safetensors
 ```
 3. Run the V3D Video diffusion to generate dense multi-views

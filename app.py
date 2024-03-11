@@ -148,9 +148,9 @@ def launch(device="cuda", port=4321, share=False):
         model_config
     ).model.params.sampler_config.params.guider_config.params.num_frames
     print("Detected num_frames:", num_frames)
-    num_steps = default(num_steps, 25)
-    output_folder = default(output_folder, f"outputs/V3D_512")
-    decoding_t = min(decoding_t, num_frames)
+    # num_steps = default(num_steps, 25)
+    num_steps = 25
+    output_folder = "outputs/V3D_512"
 
     sd = load_safetensors("./ckpts/svd_xt.safetensors")
     clip_model_config = OmegaConf.load("configs/embedder/clip_image.yaml")
@@ -172,7 +172,9 @@ def launch(device="cuda", port=4321, share=False):
     ae_model = ae_model.to(device)
     rembg_session = rembg.new_session()
 
-    model = load_model(model_config, device, num_frames, num_steps, 3.5, 3.5)
+    model = load_model(
+        model_config, device, num_frames, num_steps, min_cfg=3.5, max_cfg=3.5
+    )
 
     with gr.Blocks(title="V3D", theme=gr.themes.Monochrome()) as demo:
         with gr.Row(equal_height=True):
@@ -182,22 +184,29 @@ def launch(device="cuda", port=4321, share=False):
                 border_ratio_slider = gr.Slider(
                     value=0.05,
                     label="Border Ratio",
-                    min=0.05,
-                    max=0.5,
+                    minimum=0.05,
+                    maximum=0.5,
                     step=0.05,
+                )
+                decoding_t_slider = gr.Slider(
+                    value=num_frames,
+                    label="Number of Decoding frames",
+                    minimum=1,
+                    maximum=num_frames,
+                    step=1,
                 )
                 min_guidance_slider = gr.Slider(
                     value=0.05,
                     label="Min CFG Value",
-                    min=0.05,
-                    max=0.5,
+                    minimum=0.05,
+                    maximum=0.5,
                     step=0.05,
                 )
                 max_guidance_slider = gr.Slider(
                     value=0.05,
                     label="Max CFG Value",
-                    min=0.05,
-                    max=0.5,
+                    minimum=0.05,
+                    maximum=0.5,
                     step=0.05,
                 )
                 run_button = gr.Button(value="Run V3D")
@@ -205,31 +214,32 @@ def launch(device="cuda", port=4321, share=False):
             with gr.Column():
                 output_video = gr.Video(value=None, label="Output Orbit Video")
 
-    @run_button.click(
-        inputs=[
-            input_image,
-            border_ratio_slider,
-            min_guidance_slider,
-            max_guidance_slider,
-        ],
-        outputs=[output_video],
-    )
-    def _(image, border_ratio, min_guidance, max_guidance):
-        change_model_params(model, min_guidance, max_guidance)
-        return do_sample(
-            image,
-            model,
-            clip_model,
-            ae_model,
-            device,
-            num_frames,
-            num_steps,
-            decoding_t,
-            border_ratio,
-            False,
-            rembg_session,
-            output_folder,
+        @run_button.click(
+            inputs=[
+                input_image,
+                border_ratio_slider,
+                min_guidance_slider,
+                max_guidance_slider,
+                decoding_t_slider,
+            ],
+            outputs=[output_video],
         )
+        def _(image, border_ratio, min_guidance, max_guidance, decoding_t):
+            change_model_params(model, min_guidance, max_guidance)
+            return do_sample(
+                image,
+                model,
+                clip_model,
+                ae_model,
+                device,
+                num_frames,
+                num_steps,
+                int(decoding_t),
+                border_ratio,
+                False,
+                rembg_session,
+                output_folder,
+            )
 
     demo.launch(
         inbrowser=True, inline=False, server_port=port, share=share, show_error=True

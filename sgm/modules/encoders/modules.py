@@ -439,7 +439,6 @@ class FrozenOpenCLIPEmbedder2(AbstractEmbModel):
             arch,
             device=torch.device("cpu"),
             pretrained=version,
-            cache_dir="./.cache/huggingface/hub",
         )
         del model.visual
         self.model = model
@@ -540,7 +539,6 @@ class FrozenOpenCLIPEmbedder(AbstractEmbModel):
             arch,
             device=torch.device("cpu"),
             pretrained=version,
-            cache_dir="./.cache/huggingface/hub",
         )
         del model.visual
         self.model = model
@@ -618,7 +616,6 @@ class FrozenOpenCLIPImageEmbedder(AbstractEmbModel):
             arch,
             device=torch.device(default(init_device, "cpu")),
             pretrained=version,
-            cache_dir="./.cache/huggingface/hub",
         )
         del model.transformer
         self.model = model

@@ -128,8 +128,8 @@ def sample_one(
     save: bool = False,
     cached_model: Any = None,
     border_ratio: float = 0.3,
-    min_guidance_scale: float = 1.0,
-    max_guidance_scale: float = 2.5,
+    min_guidance_scale: float = 3.5,
+    max_guidance_scale: float = 3.5,
     sigma_max: float = None,
     ignore_alpha: bool = False,
 ):
