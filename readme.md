@@ -3,13 +3,13 @@ Zilong Chen<sup>1,2</sup>, Yikai Wang<sup>1</sup>, Feng Wang<sup>1</sup>, Zhengy
 
 <sup>1</sup>Tsinghua University, <sup>2</sup>ShengShu
 
-This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](404). 
+This repository contains the official implementation of [V3D: Video Diffusion Models are Effective 3D Generators](https://arxiv.org/abs/2403.06738). 
 
 ### [Work in Progress]
 
 We are currently working on making this completely publicly available (including refactoring code, uploading weights, etc.), so please be patient.
 
-### [Paper](assets/pdf/V3D.pdf) | [Project Page](https://heheyas.github.io/V3D) | [HF Demo](TBD)
+### [arXiv](https://arxiv.org/abs/2403.06738) | [Paper](assets/pdf/V3D.pdf) | [Project Page](https://heheyas.github.io/V3D) | [HF Demo](TBD)
 
 ### Video results
 Single Image to 3D
