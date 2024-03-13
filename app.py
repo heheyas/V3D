@@ -279,4 +279,12 @@ if __name__ == "__main__":
         path.parent.mkdir(parents=True, exist_ok=True)
         wget.download(url, out=str(path))
 
+    download_if_need(
+        "ckpts/svd_xt.safetensors",
+        "https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/resolve/main/svd_xt.safetensors -O ckpts/svd_xt.safetensors",
+    )
+    download_if_need(
+        "ckpts/V3D_512.ckpt", "https://huggingface.co/heheyas/V3D/resolve/main/V3D.ckpt"
+    )
+
     launch(opt.device, opt.port, opt.share)
