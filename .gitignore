@@ -43,3 +43,4 @@ recon/assets/
 mesh_recon/exp
 mesh_recon/runs
 mesh_recon/renders
+mesh_recon/refined
