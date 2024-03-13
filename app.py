@@ -23,6 +23,7 @@ import rembg
 import os
 from glob import glob
 from mediapy import write_video
+from pathlib import Path
 
 
 def do_sample(
@@ -269,5 +270,13 @@ if __name__ == "__main__":
     parser.add_argument("--share", action="store_true")
 
     opt = parser.parse_args()
+
+    def download_if_need(path, url):
+        if Path(path).exists():
+            return
+        import wget
+
+        path.parent.mkdir(parents=True, exist_ok=True)
+        wget.download(url, out=str(path))
 
     launch(opt.device, opt.port, opt.share)

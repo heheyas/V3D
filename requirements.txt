@@ -39,5 +39,5 @@ wheel>=0.41.0
 xformers>=0.0.20
 streamlit-keyup==0.2.0
 mediapy
-stable_dataset @ git+https://github.com/Stability-AI/datapipelines.git@main#egg=sdata
 tyro
+wget
