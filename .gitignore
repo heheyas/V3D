@@ -42,3 +42,4 @@ recon/SIBR_viewers/
 recon/assets/
 mesh_recon/exp
 mesh_recon/runs
+mesh_recon/renders
